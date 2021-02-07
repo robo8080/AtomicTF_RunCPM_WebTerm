@@ -17,6 +17,7 @@ term.js <https://github.com/chjj/term.js/><br>
 * Arduino IDE (1.8.13で動作確認をしました。)<br>
 * [Arduino core for the ESP32](https://github.com/espressif/arduino-esp32 "Title")
 * [SDdFatライブラリ](https://github.com/greiman/SdFat "Title") (1.1.4で動作確認をしました。2.x.xではコンパイルエラーになります。)
+* [WebSocket Server and Client for Arduino](https://github.com/Links2004/arduinoWebSockets "Title")
 * [FastLEDライブラリ](https://github.com/FastLED/FastLED "Title")
 * microSD カード (16GB以下のもの)
 
