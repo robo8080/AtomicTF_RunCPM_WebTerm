@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <title>WebTerm</title>
+    <script src="/term.js"></script>
+    <script>
+;(function() {
+  window.onload = function() {
+    var connection = new WebSocket('ws://'+location.hostname+':81/', ['arduino']);
+//    var connection = new WebSocket('ws://192.168.11.9:81/', ['arduino']);
+//    var connection = new WebSocket('ws://esp8266.local:81/', ['arduino']);
+
+    connection.onopen = function () {
+//      connection.send('\nConnect \n' + new Date() + "\n"); 
+      console.log('connect');
+      var term = new Terminal({
+        cols: 80,
+        rows: 25,
+        useStyle: true,
+        screenKeys: true,
+        cursorBlink: true,
+        convertEol: true
+      });
+
+      //term.open(document.body);
+//      term.write('\nConnect \n' + new Date() + "\n"); 
+
+      term.on('data', function(data) {
+        if(data == "\r") data = "\r\n";
+        //if(data == "\x7f"){
+        //	term.write("\b ");
+        //  data = "\b";
+        //}
+        //term.write(data);
+        connection.send(data);
+      });
+
+      term.on('title', function(title) {
+        document.title = title;
+      });
+
+	    var txt = document.createElement('input');
+	    txt.type = 'text';
+	    txt.id = 'iOSInputHelper';
+	    txt.dataset.state = 'init';
+	    txt.style.display = 'none';
+	    document.body.appendChild(txt);
+	    txt.style.top = '600px';
+	    
+	//    var table = document.getElementsByTagName('table')[0];
+	    txt.onkeydown = function (e) {
+	        if (e.keyCode === 13) {
+	            txt.value = '';
+	        }
+	    };
+	    document.addEventListener('touchstart', function (e) {
+	        if (txt.dataset.focus) {
+	            txt.blur();
+	            txt.dataset.focus = '';
+	        } else {
+	            txt.focus();
+	            txt.dataset.focus = 'true';
+	        }
+	    }, false);
+        
+        
+      term.open(document.body);
+
+      term.write('\nConnect \n' + new Date() + "\n"); 
+      term.write('\x1b[32mWelcome to term.js!\x1b[m\r\n');
+      
+      connection.onmessage = function (e) {
+      	//console.log('Server: ', e.data);
+        //if(e.data == "\r")  term.write("\r\n");
+        //else term.write(e.data);
+        //if(e.data == "\r") e.data = "\r\n";
+//        if((e.data == "\b")||(e.data == "\x7f")){
+//        if(e.data == "\x7f"){
+//        	//term.write("\b ");
+//          e.data = "\b ";
+//        }
+        term.write(e.data);
+      };
+
+      connection.onclose = function (event) {
+           term.destroy();
+      };
+      connection.onerror = function (error) {
+      	console.log('WebSocket Error ', error);
+      };
+    };
+  };
+}).call(this);
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
